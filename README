@@ -1,0 +1,7 @@
+project requires:
+
+    These 3rd party libs:
+        pyspotify 2, pyalsaaudio, wxpython
+
+    Also requires these files: (obtainable via a paid spotify account and registering it with spotify-dev)
+        spotify_appkey.key, spotify_cred_blob.txt
