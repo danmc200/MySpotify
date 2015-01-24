@@ -1,5 +1,4 @@
 #!/usr/bin/python
-#requies wxpython and pyspotify
 import spotify
 import threading
 import getpass
