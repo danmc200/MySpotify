@@ -30,14 +30,6 @@ class SpotifyGUI(wx.Frame):
         self.Centre()
         self.Show(True)          
         
-    def flip_play_or_pause_button(self):
-        label = self.btn.GetLabel() 
-        if(label == "Play"):
-            label = "Pause"
-        else:
-            label = "Play"
-        self.btn.SetLabel(label)
-
     def search(self, e):
         if(e.GetKeyCode() == wx.WXK_RETURN):
             search = self.player.search(self.searchText.GetLineText(0))
@@ -49,9 +41,10 @@ class SpotifyGUI(wx.Frame):
         #track = 'spotify:track:3N2UhXZI4Gf64Ku3cCjz2g'
         if(self.btn.GetLabel() == "Play"):
             self.player.play()
+            self.btn.SetLabel("Pause")
         else:
             self.player.pause()
-        self.flip_play_or_pause_button()
+            self.btn.SetLabel("Play")
 
     def pause(self, e):
         self.player.pause()
