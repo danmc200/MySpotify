@@ -19,32 +19,18 @@ class SpotifyGUI(wx.Frame):
         col_pos += search_size + 10
         self.btn = wx.Button(self, label='Play', pos=(col_pos, top_row))
         col_pos += 100
-#        btn2 = wx.Button(self, label='Pause', pos=(col_pos, top_row))
-#        col_pos += 100
-        btn3 = wx.Button(self, label='Stop', pos=(col_pos, top_row))
+        btn2 = wx.Button(self, label='Stop', pos=(col_pos, top_row))
 
         self.searchText.Bind(wx.EVT_KEY_UP, self.search)
         self.btn.Bind(wx.EVT_BUTTON, self.play)
-        #btn2.Bind(wx.EVT_BUTTON, self.pause)
-        btn3.Bind(wx.EVT_BUTTON, self.stop)
+        btn2.Bind(wx.EVT_BUTTON, self.stop)
         
         self.SetSize(wx.DisplaySize())
         self.SetTitle('My Spotify')
         self.Centre()
         self.Show(True)          
         
-    def search(self, e):
-        if(e.GetKeyCode() == wx.WXK_RETURN):
-            search = self.player.search(self.searchText.GetLineText(0))
-            track = search.tracks[0].link.uri
-            self.player.play_track(track)
-            label = "Pause"
-            self.btn.SetLabel(label)
-    
-    def show_search(self, search):
-        return search
-
-    def flip_button_text():
+    def flip_play_or_pause_button(self):
         label = self.btn.GetLabel() 
         if(label == "Play"):
             label = "Pause"
@@ -52,16 +38,20 @@ class SpotifyGUI(wx.Frame):
             label = "Play"
         self.btn.SetLabel(label)
 
+    def search(self, e):
+        if(e.GetKeyCode() == wx.WXK_RETURN):
+            search = self.player.search(self.searchText.GetLineText(0))
+            track = search.tracks[0].link.uri
+            self.player.play_track(track)
+            self.flip_play_or_pause_button()
+
     def play(self, e):
         #track = 'spotify:track:3N2UhXZI4Gf64Ku3cCjz2g'
-        label = ""
         if(self.btn.GetLabel() == "Play"):
             self.player.play()
-            label = "Pause"
         else:
             self.player.pause()
-            label = "Play"
-        self.btn.SetLabel(label)
+        self.flip_play_or_pause_button()
 
     def pause(self, e):
         self.player.pause()
