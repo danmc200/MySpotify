@@ -43,7 +43,7 @@ class SpotifyGUI(wx.Frame):
             search = self.player.search(self.searchText.GetLineText(0))
             track = search.tracks[0].link.uri
             self.player.play_track(track)
-            self.flip_play_or_pause_button()
+            self.btn.SetLabel("Pause")
 
     def play(self, e):
         #track = 'spotify:track:3N2UhXZI4Gf64Ku3cCjz2g'
