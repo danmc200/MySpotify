@@ -8,7 +8,7 @@ class SpotifyGUI(wx.Frame):
     def set_player(self, player):
         self.player = player
 
-    def InitUI(self):   
+    def init_gui(self):   
         pnl = wx.Panel(self)
         top_row = 25
         col_pos = 10
@@ -17,15 +17,15 @@ class SpotifyGUI(wx.Frame):
         self.searchText = wx.TextCtrl(self, -1, "", pos=(col_pos, top_row), size=(search_size, -1))
         self.searchText.SetInsertionPoint(0)
         col_pos += search_size + 10
-        btn = wx.Button(self, label='Play', pos=(col_pos, top_row))
+        self.btn = wx.Button(self, label='Play', pos=(col_pos, top_row))
         col_pos += 100
-        btn2 = wx.Button(self, label='Pause', pos=(col_pos, top_row))
-        col_pos += 100
+#        btn2 = wx.Button(self, label='Pause', pos=(col_pos, top_row))
+#        col_pos += 100
         btn3 = wx.Button(self, label='Stop', pos=(col_pos, top_row))
 
         self.searchText.Bind(wx.EVT_KEY_UP, self.search)
-        btn.Bind(wx.EVT_BUTTON, self.play)
-        btn2.Bind(wx.EVT_BUTTON, self.pause)
+        self.btn.Bind(wx.EVT_BUTTON, self.play)
+        #btn2.Bind(wx.EVT_BUTTON, self.pause)
         btn3.Bind(wx.EVT_BUTTON, self.stop)
         
         self.SetSize(wx.DisplaySize())
@@ -37,13 +37,31 @@ class SpotifyGUI(wx.Frame):
         if(e.GetKeyCode() == wx.WXK_RETURN):
             search = self.player.search(self.searchText.GetLineText(0))
             track = search.tracks[0].link.uri
-            self.player.play(track)
+            self.player.play_track(track)
+            label = "Pause"
+            self.btn.SetLabel(label)
+    
+    def show_search(self, search):
+        return search
+
+    def flip_button_text():
+        label = self.btn.GetLabel() 
+        if(label == "Play"):
+            label = "Pause"
+        else:
+            label = "Play"
+        self.btn.SetLabel(label)
 
     def play(self, e):
         #track = 'spotify:track:3N2UhXZI4Gf64Ku3cCjz2g'
-        search = self.player.search(self.searchText.GetLineText(0))
-        track = search.tracks[0].link.uri
-        self.player.play(track)
+        label = ""
+        if(self.btn.GetLabel() == "Play"):
+            self.player.play()
+            label = "Pause"
+        else:
+            self.player.pause()
+            label = "Play"
+        self.btn.SetLabel(label)
 
     def pause(self, e):
         self.player.pause()

@@ -18,10 +18,13 @@ class AudioPlayer():
         search.load()
         return search
 
-    def play(self, track):
+    def play_track(self, track):
         track = session.get_track(track)
         track.load()
         self.session.player.load(track)
+        self.session.player.play()
+
+    def play(self):
         self.session.player.play()
 
     def pause(self):
@@ -58,5 +61,5 @@ if __name__ == "__main__":
     app = wx.App()
     ui = spotify_gui.SpotifyGUI(None)
     ui.set_player(player)
-    ui.InitUI()
+    ui.init_gui()
     app.MainLoop()
