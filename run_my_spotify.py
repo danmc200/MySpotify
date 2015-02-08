@@ -18,6 +18,18 @@ class AudioPlayer():
         search.load()
         return search
 
+    def browse_artist(self, artist):
+        self.artist = session.get_artist(artist)
+        self.browser = self.artist.browse()
+        self.browser.load()
+        return self.browser
+
+    def browse_album(self, album):
+        self.album = session.get_album(album)
+        self.browser = self.album.browse()
+        self.browser.load()
+        return self.browser
+        
     def play_track(self, track):
         track = session.get_track(track)
         track.load()
