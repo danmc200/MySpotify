@@ -9,6 +9,7 @@ class SpotifyGUI(wx.Frame):
         self.player = player
 
     def init_gui(self):   
+        self.SetBackgroundColour('black')
         pnl = wx.Panel(self)
         top_row = 25
         col_pos = 10
@@ -31,6 +32,22 @@ class SpotifyGUI(wx.Frame):
         self.Centre()
         self.Show(True)          
 
+    def get_listbox_size(self):
+        height = wx.DisplaySize()[1]
+        top = 150
+        bottom = 50
+        height -= (top + bottom)
+        return (500,height)
+
+    def set_listbox_color(self, label):
+        label.SetForegroundColour('black')
+        label.SetBackgroundColour('white')
+
+    def set_label_color(self, label):
+        label.SetForegroundColour('yellow')
+        font = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
+        label.SetFont(font)
+
     def show_results(self, search):
         self.show_tracks(search)
         self.show_albums(search)
@@ -47,8 +64,10 @@ class SpotifyGUI(wx.Frame):
                 track_names.append(track_name)
                 self.tracks[track_name] = track
         self.tracks_label = wx.StaticText(self, label="Tracks:", pos=(10,80))
-        self.listbox = wx.ListBox(self, choices=track_names, pos=(10, 100), size=(500, 700))
+        self.set_label_color(self.tracks_label)
+        self.listbox = wx.ListBox(self, choices=track_names, pos=(10, 100), size=self.get_listbox_size())
         self.listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.play_track)
+        self.set_listbox_color(self.listbox)
 
     def clear_albums(self, search):
         self.clear(self.album_listbox)
@@ -60,8 +79,10 @@ class SpotifyGUI(wx.Frame):
                 albums_names.append(album.name)
                 self.albums[album.name] = album
         self.album_label = wx.StaticText(self, label="Albums:", pos=(520,80))
-        self.album_listbox = wx.ListBox(self, choices=albums_names, pos=(520, 100), size=(500, 700))
+        self.set_label_color(self.album_label)
+        self.album_listbox = wx.ListBox(self, choices=albums_names, pos=(520, 100), size=self.get_listbox_size())
         self.album_listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.browse_album)
+        self.set_listbox_color(self.album_listbox)
 
     def clear_artists(self, search):
         self.clear(self.artist_listbox)
@@ -73,8 +94,10 @@ class SpotifyGUI(wx.Frame):
                 artists_names.append(artist.name)
                 self.artists[artist.name] = artist
         self.artist_label = wx.StaticText(self, label="Artists:", pos=(1040,80))
-        self.artist_listbox = wx.ListBox(self, choices=artists_names, pos=(1040, 100), size=(500, 700))
+        self.set_label_color(self.artist_label)
+        self.artist_listbox = wx.ListBox(self, choices=artists_names, pos=(1040, 100), size=self.get_listbox_size())
         self.artist_listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.browse_artist)
+        self.set_listbox_color(self.artist_listbox)
 
     def clear(self, lb):
         leng = lb.GetCount()
