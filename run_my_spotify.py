@@ -72,6 +72,5 @@ if __name__ == "__main__":
 
     app = wx.App()
     ui = spotify_gui.SpotifyGUI(None)
-    ui.set_player(player)
-    ui.init_gui()
+    ui.init_gui(player)
     app.MainLoop()

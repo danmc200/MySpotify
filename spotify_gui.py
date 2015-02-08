@@ -5,10 +5,8 @@ class SpotifyGUI(wx.Frame):
     def __init__(self, *args, **kw):
         super(SpotifyGUI, self).__init__(*args, **kw) 
         
-    def set_player(self, player):
+    def init_gui(self, player):   
         self.player = player
-
-    def init_gui(self):   
         self.SetBackgroundColour('black')
         pnl = wx.Panel(self)
         top_row = 25
@@ -104,35 +102,31 @@ class SpotifyGUI(wx.Frame):
         for index in range(0, leng):
             lb.Delete(0) 
 
-    def browse_artist(self, e):
-        select = self.artist_listbox.GetSelection()
+    def get_selection(self, listbox, dic):
+        select = listbox.GetSelection()
         if(select == wx.NOT_FOUND):
             print "not found"
-            return
-        artist_name = self.artist_listbox.GetString(select)
-        artist = self.artists[artist_name]
-        browser = self.player.browse_artist(artist.link.uri)
-        self.show_albums(browser)
+            return select
+        name = listbox.GetString(select)
+        return dic[name]
+
+    def browse_artist(self, e):
+        artist = self.get_selection(self.artist_listbox, self.artists)
+        if(artist != wx.NOT_FOUND):
+            browser = self.player.browse_artist(artist.link.uri)
+            self.show_albums(browser)
 
     def browse_album(self, e):
-        select = self.album_listbox.GetSelection()
-        if(select == wx.NOT_FOUND):
-            print "not found"
-            return
-        album_name = self.album_listbox.GetString(select)
-        album = self.albums[album_name]
-        browser = self.player.browse_album(album.link.uri)
-        self.show_tracks(browser)
+        album = self.get_selection(self.album_listbox, self.albums)
+        if(album != wx.NOT_FOUND):
+            browser = self.player.browse_album(album.link.uri)
+            self.show_tracks(browser)
 
     def play_track(self,e):
-        select = self.listbox.GetSelection()
-        if(select == wx.NOT_FOUND):
-            print "not found"
-            return
-        track_name = self.listbox.GetString(select)
-        track = self.tracks[track_name]
-        self.player.play_track(track.link.uri)
-        self.btn.SetLabel("Pause")
+        track = self.get_selection(self.listbox, self.tracks)
+        if(track != wx.NOT_FOUND):
+            self.player.play_track(track.link.uri)
+            self.btn.SetLabel("Pause")
 
     def search(self, e):
         if(e.GetKeyCode() == wx.WXK_RETURN):
