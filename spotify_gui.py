@@ -43,8 +43,9 @@ class SpotifyGUI(wx.Frame):
             track_name = track.name 
             if(artist):
                 track_name += " (" + track.artists[0].name + ")"
-            track_names.append(track_name)
-            self.tracks[track_name] = track
+            if(track_name not in track_names):
+                track_names.append(track_name)
+                self.tracks[track_name] = track
         self.tracks_label = wx.StaticText(self, label="Tracks:", pos=(10,80))
         self.listbox = wx.ListBox(self, choices=track_names, pos=(10, 100), size=(500, 700))
         self.listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.play_track)
@@ -55,9 +56,9 @@ class SpotifyGUI(wx.Frame):
         albums_names = []
         self.albums = {}
         for album in search.albums:
-            print album.name
-            albums_names.append(album.name)
-            self.albums[album.name] = album
+            if(album.name not in albums_names):
+                albums_names.append(album.name)
+                self.albums[album.name] = album
         self.album_label = wx.StaticText(self, label="Albums:", pos=(520,80))
         self.album_listbox = wx.ListBox(self, choices=albums_names, pos=(520, 100), size=(500, 700))
         self.album_listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.browse_album)
@@ -68,9 +69,9 @@ class SpotifyGUI(wx.Frame):
         artists_names = []
         self.artists = {}
         for artist in search.artists:
-            print artist.name
-            artists_names.append(artist.name)
-            self.artists[artist.name] = artist
+            if(artist.name not in artists_names):
+                artists_names.append(artist.name)
+                self.artists[artist.name] = artist
         self.artist_label = wx.StaticText(self, label="Artists:", pos=(1040,80))
         self.artist_listbox = wx.ListBox(self, choices=artists_names, pos=(1040, 100), size=(500, 700))
         self.artist_listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.browse_artist)
