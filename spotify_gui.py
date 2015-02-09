@@ -5,6 +5,8 @@ class SpotifyGUI(wx.Frame):
     def __init__(self, *args, **kw):
         super(SpotifyGUI, self).__init__(*args, **kw) 
         self.last_pos = (20,10)
+        self.listbox_margin = 20
+        self.listboxCount = 3
         
     def init_gui(self, player):   
         self.player = player
@@ -30,13 +32,13 @@ class SpotifyGUI(wx.Frame):
         self.listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.play_track)
         self.set_listbox_color(self.listbox)
 
-        self.album_label = wx.StaticText(self, label="Albums:", pos=self.get_next_pos(listbox_size[0] + 20))
+        self.album_label = wx.StaticText(self, label="Albums:", pos=self.get_next_pos(listbox_size[0] + self.listbox_margin))
         self.set_label_color(self.album_label)
         self.album_listbox = wx.ListBox(self, choices=[], pos=self.get_pos_offset(height_off=20), size=listbox_size)
         self.album_listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.browse_album)
         self.set_listbox_color(self.album_listbox)
 
-        self.artist_label = wx.StaticText(self, label="Artists:", pos=self.get_next_pos(listbox_size[0] + 20))
+        self.artist_label = wx.StaticText(self, label="Artists:", pos=self.get_next_pos(listbox_size[0] + self.listbox_margin))
         self.set_label_color(self.artist_label)
         self.artist_listbox = wx.ListBox(self, choices=[], pos=self.get_pos_offset(height_off=20), size=listbox_size)
         self.artist_listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.browse_artist)
@@ -63,10 +65,8 @@ class SpotifyGUI(wx.Frame):
 
     def get_listbox_size(self):
         width = wx.DisplaySize()[0]
-        margin = 20
-        listboxCount = 3
-        width -= (margin*4)
-        width /= listboxCount
+        width -= (self.listbox_margin*4)
+        width /= self.listboxCount
         height = wx.DisplaySize()[1]
         top = 150
         bottom = 50
