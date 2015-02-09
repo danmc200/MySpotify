@@ -4,31 +4,61 @@ class SpotifyGUI(wx.Frame):
 
     def __init__(self, *args, **kw):
         super(SpotifyGUI, self).__init__(*args, **kw) 
+        self.last_pos = (25,10)
         
     def init_gui(self, player):   
         self.player = player
-        self.SetBackgroundColour('black')
         pnl = wx.Panel(self)
-        top_row = 25
-        col_pos = 10
         search_size = 175
 
-        self.searchText = wx.TextCtrl(self, -1, "", pos=(col_pos, top_row), size=(search_size, -1))
+        self.searchText = wx.TextCtrl(self, -1, "", pos=self.get_next_pos(0), size=(search_size, -1))
         self.searchText.SetInsertionPoint(0)
         self.searchText.SetFocus()
-        col_pos += search_size + 10
-        self.btn = wx.Button(self, label='Play', pos=(col_pos, top_row))
-        col_pos += 100
-        btn2 = wx.Button(self, label='Stop', pos=(col_pos, top_row))
-
         self.searchText.Bind(wx.EVT_KEY_UP, self.search)
+
+        self.btn = wx.Button(self, label='Play', pos=self.get_next_pos(search_size+10))
         self.btn.Bind(wx.EVT_BUTTON, self.play)
+
+        btn2 = wx.Button(self, label='Stop', pos=self.get_next_pos(100))
         btn2.Bind(wx.EVT_BUTTON, self.stop)
+
+        self.set_next_pos(10, 80)
+        self.tracks_label = wx.StaticText(self, label="Tracks:", pos=self.get_next_pos(0))
+        self.set_label_color(self.tracks_label)
+        self.listbox = wx.ListBox(self, choices=[], pos=self.get_pos_offset(height_off=20), size=self.get_listbox_size())
+        self.listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.play_track)
+        self.set_listbox_color(self.listbox)
+
+        self.album_label = wx.StaticText(self, label="Albums:", pos=self.get_next_pos(520))
+        self.set_label_color(self.album_label)
+        self.album_listbox = wx.ListBox(self, choices=[], pos=self.get_pos_offset(height_off=20), size=self.get_listbox_size())
+        self.album_listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.browse_album)
+        self.set_listbox_color(self.album_listbox)
+
+        self.artist_label = wx.StaticText(self, label="Artists:", pos=self.get_next_pos(520))
+        self.set_label_color(self.artist_label)
+        self.artist_listbox = wx.ListBox(self, choices=[], pos=self.get_pos_offset(height_off=20), size=self.get_listbox_size())
+        self.artist_listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.browse_artist)
+        self.set_listbox_color(self.artist_listbox)
         
         self.SetSize(wx.DisplaySize())
         self.SetTitle('My Spotify')
+        self.SetBackgroundColour('black')
         self.Centre()
         self.Show(True)          
+
+    def get_pos_offset(self, width_off=0, height_off=0):
+        pos = (self.last_pos[0] + width_off, self.last_pos[1] + height_off)
+        return pos
+
+    def set_next_pos(self, width, height=0):
+        pos = (width, height)
+        self.last_pos = pos
+
+    def get_next_pos(self, width, height=0):
+        pos = (self.last_pos[0] + width, self.last_pos[1] + height)
+        self.last_pos = pos
+        return pos
 
     def get_listbox_size(self):
         height = wx.DisplaySize()[1]
@@ -51,6 +81,21 @@ class SpotifyGUI(wx.Frame):
         self.show_albums(search)
         self.show_artists(search)
 
+    def get_selection(self, listbox, dic):
+        select = listbox.GetSelection()
+        if(select == wx.NOT_FOUND):
+            print "not found"
+            return select
+        name = listbox.GetString(select)
+        return dic[name]
+
+    def load_selections(self, listbox, selections):
+        selections.reverse()
+        for selection in selections:
+            listbox.Insert(selection, 0)
+
+    def clear_tracks(self):
+        self.clear(self.listbox)
     def show_tracks(self, search, artist=True):
         track_names = []
         self.tracks = {}
@@ -61,13 +106,10 @@ class SpotifyGUI(wx.Frame):
             if(track_name not in track_names):
                 track_names.append(track_name)
                 self.tracks[track_name] = track
-        self.tracks_label = wx.StaticText(self, label="Tracks:", pos=(10,80))
-        self.set_label_color(self.tracks_label)
-        self.listbox = wx.ListBox(self, choices=track_names, pos=(10, 100), size=self.get_listbox_size())
-        self.listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.play_track)
-        self.set_listbox_color(self.listbox)
+        self.clear_tracks()
+        self.load_selections(self.listbox, track_names)
 
-    def clear_albums(self, search):
+    def clear_albums(self):
         self.clear(self.album_listbox)
     def show_albums(self, search):
         albums_names = []
@@ -76,13 +118,10 @@ class SpotifyGUI(wx.Frame):
             if(album.name not in albums_names):
                 albums_names.append(album.name)
                 self.albums[album.name] = album
-        self.album_label = wx.StaticText(self, label="Albums:", pos=(520,80))
-        self.set_label_color(self.album_label)
-        self.album_listbox = wx.ListBox(self, choices=albums_names, pos=(520, 100), size=self.get_listbox_size())
-        self.album_listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.browse_album)
-        self.set_listbox_color(self.album_listbox)
+        self.clear_albums()
+        self.load_selections(self.album_listbox, albums_names)
 
-    def clear_artists(self, search):
+    def clear_artists(self):
         self.clear(self.artist_listbox)
     def show_artists(self, search):
         artists_names = []
@@ -91,24 +130,13 @@ class SpotifyGUI(wx.Frame):
             if(artist.name not in artists_names):
                 artists_names.append(artist.name)
                 self.artists[artist.name] = artist
-        self.artist_label = wx.StaticText(self, label="Artists:", pos=(1040,80))
-        self.set_label_color(self.artist_label)
-        self.artist_listbox = wx.ListBox(self, choices=artists_names, pos=(1040, 100), size=self.get_listbox_size())
-        self.artist_listbox.Bind(wx.EVT_LISTBOX_DCLICK, self.browse_artist)
-        self.set_listbox_color(self.artist_listbox)
+        self.clear_artists()
+        self.load_selections(self.artist_listbox, artists_names)
 
     def clear(self, lb):
         leng = lb.GetCount()
         for index in range(0, leng):
             lb.Delete(0) 
-
-    def get_selection(self, listbox, dic):
-        select = listbox.GetSelection()
-        if(select == wx.NOT_FOUND):
-            print "not found"
-            return select
-        name = listbox.GetString(select)
-        return dic[name]
 
     def browse_artist(self, e):
         artist = self.get_selection(self.artist_listbox, self.artists)
