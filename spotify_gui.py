@@ -11,7 +11,7 @@ class SpotifyGUI(wx.Frame):
     def init_gui(self, player, EVT_DISPLAY_TRACK):
         self.player = player
         pnl = wx.Panel(self)
-        search_size = 175
+        search_size = 180
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         self.Bind(EVT_DISPLAY_TRACK, self.display_track)
 
