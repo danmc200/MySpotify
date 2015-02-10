@@ -46,10 +46,6 @@ class PlayerThread(threading.Thread):
         while(1):
             if(self.kill):
                 return
-            if(self.session.player.state == 'unloaded' and len(self.queue) > 0 and not self.stop):
-                self.index += 1
-                self.player.play_track(self.queue[self.index])
-
             elif(self.next_flag):
                 self.next_flag = False
                 self.index += 1

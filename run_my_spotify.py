@@ -3,7 +3,7 @@ import spotify
 import threading
 import getpass
 
-import wx, spotify_gui, player_thread
+import wx, spotify_gui, player_thread, track_end_thread
 
 class AudioPlayer():
 
@@ -14,6 +14,8 @@ class AudioPlayer():
         self.loop.start()
         self.p_thread = player_thread.PlayerThread(self, self.session)
         self.p_thread.start()
+        self.e_thread = track_end_thread.EndThread(self, self.session)
+        self.e_thread.start()
 
     def search(self, query):
         search = self.session.search(query)
@@ -67,6 +69,7 @@ class AudioPlayer():
     def close(self):
         self.session.logout()
         self.p_thread.kill_thread()
+        self.e_thread.kill_thread()
 
 def get_username_password():
     un = raw_input('Enter Username\n')
