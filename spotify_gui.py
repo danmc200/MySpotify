@@ -26,16 +26,17 @@ class SpotifyGUI(wx.Frame):
         btn2 = wx.Button(self, label='Stop', pos=self.get_next_pos(100))
         btn2.Bind(wx.EVT_BUTTON, self.stop)
 
-        btn3 = wx.Button(self, label='Prev', pos=self.get_next_pos(100))
+        self.playing_label = wx.StaticText(self, label="Track: ", pos=(20, 45))
+        self.set_playing_label_color(self.playing_label)
+
+        self.set_next_pos(20, 70)
+        btn3 = wx.Button(self, label='Prev', pos=self.get_next_pos(0))
         btn3.Bind(wx.EVT_BUTTON, self.play_prev)
 
         btn4 = wx.Button(self, label='Next', pos=self.get_next_pos(100))
         btn4.Bind(wx.EVT_BUTTON, self.play_next)
 
-        self.playing_label = wx.StaticText(self, label="Track: ", pos=(20, 40))
-        self.set_playing_label_color(self.playing_label)
-
-        self.set_next_pos(20, 80)
+        self.set_next_pos(20, 110)
         listbox_size = self.get_listbox_size()
         self.tracks_label = wx.StaticText(self, label="Tracks:", pos=self.get_next_pos(0))
         self.set_label_color(self.tracks_label)
@@ -79,7 +80,7 @@ class SpotifyGUI(wx.Frame):
         width -= (self.listbox_margin*4)
         width /= self.listbox_count
         height = wx.DisplaySize()[1]
-        top = 150
+        top = 180
         bottom = 50
         height -= (top + bottom)
         return (width,height)
