@@ -46,9 +46,9 @@ class AudioPlayer():
             print "couldn't play"#todo show in gui
 
     def set_next_flag(self):
-        self.p_thread.set_next_flag()
+        return self.p_thread.set_next_flag()
     def set_prev_flag(self):
-        self.p_thread.set_prev_flag()
+        return self.p_thread.set_prev_flag()
 
     def set_index(self, index):
         self.p_thread.set_index(index)

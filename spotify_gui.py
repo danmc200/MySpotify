@@ -1,4 +1,4 @@
-import wx, sys
+import wx
 
 class SpotifyGUI(wx.Frame):
 
@@ -30,7 +30,10 @@ class SpotifyGUI(wx.Frame):
 
         btn4 = wx.Button(self, label='Next', pos=self.get_next_pos(100))
         btn4.Bind(wx.EVT_BUTTON, self.play_next)
-        
+
+        self.playing_label = wx.StaticText(self, label="Track: ", pos=(20, 40))
+        self.set_playing_label_color(self.playing_label)
+
         self.set_next_pos(20, 80)
         listbox_size = self.get_listbox_size()
         self.tracks_label = wx.StaticText(self, label="Tracks:", pos=self.get_next_pos(0))
@@ -84,6 +87,11 @@ class SpotifyGUI(wx.Frame):
         label.SetForegroundColour('black')
         label.SetBackgroundColour('white')
 
+    def set_playing_label_color(self, label):
+        label.SetForegroundColour('blue')
+        font = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
+        label.SetFont(font)
+
     def set_label_color(self, label):
         label.SetForegroundColour('yellow')
         font = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
@@ -136,6 +144,8 @@ class SpotifyGUI(wx.Frame):
                 self.tracks[track_name] = track
         self.clear_tracks()
         self.load_selections(self.listbox, track_names)
+    def display_track(self, track):
+        self.playing_label.SetLabel("Track: " + track.name)
 
     def clear_albums(self):
         self.clear(self.album_listbox)
@@ -179,12 +189,15 @@ class SpotifyGUI(wx.Frame):
             self.player.set_queue(self.get_queue(self.listbox, self.tracks))
             self.player.set_index(self.listbox.GetSelection())
             self.player.play_track(track)
+            self.display_track(track)
             self.btn.SetLabel("Pause")
 
     def play_next(self, e):
-        self.player.set_next_flag()
+        track = self.player.set_next_flag()
+        self.display_track(track)
     def play_prev(self, e):
-        self.player.set_prev_flag()
+        track = self.player.set_prev_flag()
+        self.display_track(track)
 
     def search(self, e):
         if(e.GetKeyCode() == wx.WXK_RETURN):

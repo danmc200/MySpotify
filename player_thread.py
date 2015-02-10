@@ -23,10 +23,18 @@ class PlayerThread(threading.Thread):
         self.queue = queue
 
     def set_prev_flag(self):
-        self.prev_flag = True
+        index = self.index
+        if(self.index-1 > 0):
+            self.prev_flag = True
+            index -= 1
+        return self.queue[index]
 
     def set_next_flag(self):
-        self.next_flag = True
+        index = self.index
+        if(self.index+1 < len(self.queue)-1):
+            self.next_flag = True
+            index += 1
+        return self.queue[index]
 
     def set_index(self, index):
         self.index = index
@@ -44,14 +52,12 @@ class PlayerThread(threading.Thread):
 
             elif(self.next_flag):
                 self.next_flag = False
-                if(self.index+1 < len(self.queue)-1):
-                    self.index += 1
-                    self.player.play_track(self.queue[self.index])
+                self.index += 1
+                self.player.play_track(self.queue[self.index])
 
             elif(self.prev_flag):
                 self.prev_flag = False
-                if(self.index-1 > 0):
-                    self.index -= 1
-                    self.player.play_track(self.queue[self.index])
+                self.index -= 1
+                self.player.play_track(self.queue[self.index])
 
             time.sleep(.1)
