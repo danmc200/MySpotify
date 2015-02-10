@@ -1,4 +1,5 @@
 import wx
+import spotify
 
 class SpotifyGUI(wx.Frame):
 
@@ -8,11 +9,12 @@ class SpotifyGUI(wx.Frame):
         self.listbox_margin = 20
         self.listbox_count = 3
         
-    def init_gui(self, player):   
+    def init_gui(self, player, EVT_DISPLAY_TRACK):
         self.player = player
         pnl = wx.Panel(self)
         search_size = 175
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
+        self.Bind(EVT_DISPLAY_TRACK, self.display_track)
 
         self.searchText = wx.TextCtrl(self, -1, "", pos=self.get_next_pos(0), size=(search_size, -1))
         self.searchText.SetInsertionPoint(0)
@@ -144,7 +146,8 @@ class SpotifyGUI(wx.Frame):
                 self.tracks[track_name] = track
         self.clear_tracks()
         self.load_selections(self.listbox, track_names)
-    def display_track(self, track):
+    def display_track(self, evt):
+        track = evt.GetValue()
         self.playing_label.SetLabel("Track: " + track.name)
 
     def clear_albums(self):
@@ -189,15 +192,12 @@ class SpotifyGUI(wx.Frame):
             self.player.set_queue(self.get_queue(self.listbox, self.tracks))
             self.player.set_index(self.listbox.GetSelection())
             self.player.play_track(track)
-            self.display_track(track)
             self.btn.SetLabel("Pause")
 
     def play_next(self, e):
-        track = self.player.set_next_flag()
-        self.display_track(track)
+        self.player.set_next_flag()
     def play_prev(self, e):
-        track = self.player.set_prev_flag()
-        self.display_track(track)
+        self.player.set_prev_flag()
 
     def search(self, e):
         if(e.GetKeyCode() == wx.WXK_RETURN):

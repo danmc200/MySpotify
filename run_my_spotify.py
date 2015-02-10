@@ -3,19 +3,18 @@ import spotify
 import threading
 import getpass
 
-import wx, spotify_gui, player_thread, track_end_thread
+import wx, spotify_gui, player_thread, display_track_event
 
 class AudioPlayer():
 
-    def __init__(self, session):
+    def __init__(self, session, ui):
         self.session = session
+        self.ui = ui
         self.audio = spotify.AlsaSink(session)
         self.loop = spotify.EventLoop(session)
         self.loop.start()
         self.p_thread = player_thread.PlayerThread(self, self.session)
         self.p_thread.start()
-        self.e_thread = track_end_thread.EndThread(self, self.session)
-        self.e_thread.start()
 
     def search(self, query):
         search = self.session.search(query)
@@ -40,17 +39,19 @@ class AudioPlayer():
     def play_track(self, track):
         self.p_thread.set_stop(False)
         try:
-            track = session.get_track(track.link.uri)
-            track.load()
-            self.session.player.load(track)
+            trackS = session.get_track(track.link.uri)
+            trackS.load()
+            self.session.player.load(trackS)
             self.session.player.play()
         except:
             print "couldn't play"#todo show in gui
+        evt = display_track_event.DisplayTrackEvent(display_track_event.myEVT_DISPLAY_TRACK, -1, track)
+        wx.PostEvent(self.ui, evt)
 
     def set_next_flag(self):
-        return self.p_thread.set_next_flag()
+        track = self.p_thread.set_next_flag()
     def set_prev_flag(self):
-        return self.p_thread.set_prev_flag()
+        track = self.p_thread.set_prev_flag()
 
     def set_index(self, index):
         self.p_thread.set_index(index)
@@ -69,7 +70,6 @@ class AudioPlayer():
     def close(self):
         self.session.logout()
         self.p_thread.kill_thread()
-        self.e_thread.kill_thread()
 
 def get_username_password():
     un = raw_input('Enter Username\n')
@@ -89,11 +89,12 @@ def login(session):
         session.process_events()
 
 if __name__ == "__main__":
-    session = spotify.Session()
-    player = AudioPlayer(session)
-    login(session)
-
     app = wx.App()
     ui = spotify_gui.SpotifyGUI(None)
-    ui.init_gui(player)
+
+    session = spotify.Session()
+    player = AudioPlayer(session, ui)
+    login(session)
+
+    ui.init_gui(player, display_track_event.EVT_DISPLAY_TRACK)
     app.MainLoop()
