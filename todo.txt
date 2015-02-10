@@ -1,0 +1,3 @@
+filter tracks/albums not playable
+update browse automatically
+add album artwork
