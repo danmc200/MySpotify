@@ -3,7 +3,7 @@ import spotify
 import threading
 import getpass
 
-import wx, spotify_gui
+import wx, spotify_gui, player_thread
 
 class AudioPlayer():
 
@@ -12,6 +12,8 @@ class AudioPlayer():
         self.audio = spotify.AlsaSink(session)
         self.loop = spotify.EventLoop(session)
         self.loop.start()
+        self.p_thread = player_thread.PlayerThread(self, self.session)
+        self.p_thread.start()
 
     def search(self, query):
         search = self.session.search(query)
@@ -30,23 +32,41 @@ class AudioPlayer():
         self.browser.load()
         return self.browser
         
+    def set_queue(self, tracks):
+        self.p_thread.set_queue(tracks)
+
     def play_track(self, track):
-        track = session.get_track(track)
-        track.load()
-        self.session.player.load(track)
-        self.session.player.play()
+        self.p_thread.set_stop(False)
+        try:
+            track = session.get_track(track.link.uri)
+            track.load()
+            self.session.player.load(track)
+            self.session.player.play()
+        except:
+            print "couldn't play"#todo show in gui
+
+    def set_next_flag(self):
+        self.p_thread.set_next_flag()
+    def set_prev_flag(self):
+        self.p_thread.set_prev_flag()
+
+    def set_index(self, index):
+        self.p_thread.set_index(index)
 
     def play(self):
+        self.p_thread.set_stop(False)
         self.session.player.play()
 
     def pause(self):
         self.session.player.pause()
 
     def stop(self):
+        self.p_thread.set_stop(True)
         self.session.player.unload()
 
     def close(self):
         self.session.logout()
+        self.p_thread.kill_thread()
 
 def get_username_password():
     un = raw_input('Enter Username\n')

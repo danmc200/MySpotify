@@ -1,4 +1,4 @@
-import wx
+import wx, sys
 
 class SpotifyGUI(wx.Frame):
 
@@ -6,12 +6,13 @@ class SpotifyGUI(wx.Frame):
         super(SpotifyGUI, self).__init__(*args, **kw) 
         self.last_pos = (20,10)
         self.listbox_margin = 20
-        self.listboxCount = 3
+        self.listbox_count = 3
         
     def init_gui(self, player):   
         self.player = player
         pnl = wx.Panel(self)
         search_size = 175
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
         self.searchText = wx.TextCtrl(self, -1, "", pos=self.get_next_pos(0), size=(search_size, -1))
         self.searchText.SetInsertionPoint(0)
@@ -24,6 +25,12 @@ class SpotifyGUI(wx.Frame):
         btn2 = wx.Button(self, label='Stop', pos=self.get_next_pos(100))
         btn2.Bind(wx.EVT_BUTTON, self.stop)
 
+        btn3 = wx.Button(self, label='Prev', pos=self.get_next_pos(100))
+        btn3.Bind(wx.EVT_BUTTON, self.play_prev)
+
+        btn4 = wx.Button(self, label='Next', pos=self.get_next_pos(100))
+        btn4.Bind(wx.EVT_BUTTON, self.play_next)
+        
         self.set_next_pos(20, 80)
         listbox_size = self.get_listbox_size()
         self.tracks_label = wx.StaticText(self, label="Tracks:", pos=self.get_next_pos(0))
@@ -66,7 +73,7 @@ class SpotifyGUI(wx.Frame):
     def get_listbox_size(self):
         width = wx.DisplaySize()[0]
         width -= (self.listbox_margin*4)
-        width /= self.listboxCount
+        width /= self.listbox_count
         height = wx.DisplaySize()[1]
         top = 150
         bottom = 50
@@ -87,6 +94,16 @@ class SpotifyGUI(wx.Frame):
         self.show_albums(search)
         self.show_artists(search)
 
+    def get_queue(self, listbox, dic):
+        queue = []
+        for s in range(0, listbox.GetCount()):
+            if(s == wx.NOT_FOUND):
+                print "not found"
+                return s
+            name = listbox.GetString(s)
+            queue.append(dic[name])
+        return queue
+
     def get_selection(self, listbox, dic):
         select = listbox.GetSelection()
         if(select == wx.NOT_FOUND):
@@ -99,6 +116,11 @@ class SpotifyGUI(wx.Frame):
         selections.reverse()
         for selection in selections:
             listbox.Insert(selection, 0)
+
+    def clear(self, lb):
+        leng = lb.GetCount()
+        for index in range(0, leng):
+            lb.Delete(0) 
 
     def clear_tracks(self):
         self.clear(self.listbox)
@@ -139,11 +161,6 @@ class SpotifyGUI(wx.Frame):
         self.clear_artists()
         self.load_selections(self.artist_listbox, artists_names)
 
-    def clear(self, lb):
-        leng = lb.GetCount()
-        for index in range(0, leng):
-            lb.Delete(0) 
-
     def browse_artist(self, e):
         artist = self.get_selection(self.artist_listbox, self.artists)
         if(artist != wx.NOT_FOUND):
@@ -159,8 +176,15 @@ class SpotifyGUI(wx.Frame):
     def play_track(self,e):
         track = self.get_selection(self.listbox, self.tracks)
         if(track != wx.NOT_FOUND):
-            self.player.play_track(track.link.uri)
+            self.player.set_queue(self.get_queue(self.listbox, self.tracks))
+            self.player.set_index(self.listbox.GetSelection())
+            self.player.play_track(track)
             self.btn.SetLabel("Pause")
+
+    def play_next(self, e):
+        self.player.set_next_flag()
+    def play_prev(self, e):
+        self.player.set_prev_flag()
 
     def search(self, e):
         if(e.GetKeyCode() == wx.WXK_RETURN):
@@ -168,7 +192,6 @@ class SpotifyGUI(wx.Frame):
             self.show_results(search)
 
     def play(self, e):
-        #track = 'spotify:track:3N2UhXZI4Gf64Ku3cCjz2g'
         if(self.btn.GetLabel() == "Play"):
             self.player.play()
             self.btn.SetLabel("Pause")
@@ -180,8 +203,9 @@ class SpotifyGUI(wx.Frame):
         self.player.pause()
 
     def stop(self, e):
+        self.btn.SetLabel("Play")
         self.player.stop()
 
-    def OnClose(self, e):
+    def OnCloseWindow(self, e):
         self.player.close()
-        self.Close(True)     
+        self.Destroy()
