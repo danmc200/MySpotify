@@ -27,14 +27,12 @@ class PlayerThread(threading.Thread):
         if(self.index-1 > 0):
             self.prev_flag = True
             index -= 1
-        return self.queue[index]
 
     def set_next_flag(self):
         index = self.index
         if(self.index+1 < len(self.queue)-1):
             self.next_flag = True
             index += 1
-        return self.queue[index]
 
     def set_index(self, index):
         self.index = index

@@ -49,9 +49,9 @@ class AudioPlayer():
         wx.PostEvent(self.ui, evt)
 
     def set_next_flag(self):
-        track = self.p_thread.set_next_flag()
+        self.p_thread.set_next_flag()
     def set_prev_flag(self):
-        track = self.p_thread.set_prev_flag()
+        self.p_thread.set_prev_flag()
 
     def set_index(self, index):
         self.p_thread.set_index(index)

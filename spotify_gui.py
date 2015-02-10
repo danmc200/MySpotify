@@ -1,5 +1,4 @@
 import wx
-import spotify
 
 class SpotifyGUI(wx.Frame):
 
