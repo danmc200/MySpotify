@@ -48,10 +48,8 @@ class AudioPlayer():
         evt = display_track_event.DisplayTrackEvent(display_track_event.myEVT_DISPLAY_TRACK, -1, track)
         wx.PostEvent(self.ui, evt)
 
-    def set_next_flag(self):
-        self.p_thread.set_next_flag()
-    def set_prev_flag(self):
-        self.p_thread.set_prev_flag()
+    def set_index_offset(self, index_offset):
+        self.p_thread.set_index_offset(index_offset)
 
     def set_index(self, index):
         self.p_thread.set_index(index)
