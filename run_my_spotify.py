@@ -2,8 +2,8 @@
 import spotify
 import threading
 import getpass
-
-import wx, spotify_gui, player_thread, display_track_event
+import wx
+import spotify_gui, player_thread, my_events
 
 class AudioPlayer():
 
@@ -52,7 +52,7 @@ class AudioPlayer():
                 trackS.load()
                 self.session.player.load(trackS)
                 self.session.player.play()
-                evt = display_track_event.DisplayTrackEvent(display_track_event.myEVT_DISPLAY_TRACK, -1, track)
+                evt = my_events.DisplayTrackEvent(my_events.myEVT_DISPLAY_TRACK, -1, track)
                 wx.PostEvent(self.ui, evt)
             except:
                 print "couldn't play"#todo show in gui
@@ -94,5 +94,5 @@ if __name__ == "__main__":
     player = AudioPlayer(session, ui)
     login(session)
 
-    ui.init_gui(player, display_track_event.EVT_DISPLAY_TRACK)
+    ui.init_gui(player, my_events)
     app.MainLoop()

@@ -6,13 +6,13 @@ class SpotifyGUI(wx.Frame):
     def __init__(self, *args, **kw):
         super(SpotifyGUI, self).__init__(*args, **kw) 
         
-    def init_gui(self, player, EVT_DISPLAY_TRACK):
+    def init_gui(self, player, my_events):
         self.player = player
         pnl = wx.Panel(self)
-        search_size = 180
         util = gui_util.GuiUtil()
+        search_size = 180
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
-        self.Bind(EVT_DISPLAY_TRACK, self.display_track)
+        self.Bind(my_events.EVT_DISPLAY_TRACK, self.display_track)
 
         self.searchText = wx.TextCtrl(self, -1, "", pos=util.get_next_pos(0), size=(search_size, -1))
         self.searchText.SetInsertionPoint(0)
