@@ -36,26 +36,26 @@ class AudioPlayer():
     def set_queue(self, tracks):
         self.p_thread.set_queue(tracks)
 
-    def play_track(self, track):
+    def play_track(self, index):
         self.p_thread.set_stop(False)
-        try:
-            trackS = session.get_track(track.link.uri)
-            trackS.load()
-            self.session.player.load(trackS)
-            self.session.player.play()
-        except:
-            print "couldn't play"#todo show in gui
-        evt = display_track_event.DisplayTrackEvent(display_track_event.myEVT_DISPLAY_TRACK, -1, track)
-        wx.PostEvent(self.ui, evt)
+        self.p_thread.set_index(index)
 
     def set_index_offset(self, index_offset):
         self.p_thread.set_index_offset(index_offset)
 
-    def set_index(self, index):
-        self.p_thread.set_index(index)
-
     def play(self):
         self.p_thread.set_stop(False)
+        if(self.session.player.state != 'paused'):
+            try:
+                track = self.p_thread.get_track()
+                trackS = session.get_track(track.link.uri)
+                trackS.load()
+                self.session.player.load(trackS)
+                self.session.player.play()
+                evt = display_track_event.DisplayTrackEvent(display_track_event.myEVT_DISPLAY_TRACK, -1, track)
+                wx.PostEvent(self.ui, evt)
+            except:
+                print "couldn't play"#todo show in gui
         self.session.player.play()
 
     def pause(self):

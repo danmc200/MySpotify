@@ -157,8 +157,8 @@ class SpotifyGUI(wx.Frame):
         track = self.get_selection(self.listbox, self.tracks)
         if(track != wx.NOT_FOUND):
             self.player.set_queue(self.build_queue(self.listbox, self.tracks))
-            self.player.set_index(self.listbox.GetSelection())
-            self.player.play_track(track)
+            index = self.listbox.GetSelection()
+            self.player.play_track(index)
             self.btn.SetLabel("Pause")
 
     def play_next(self, e):
