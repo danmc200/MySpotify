@@ -10,13 +10,9 @@ class PlayerThread(threading.Thread):
         self.session = session
 
         self.queue = []
-        self.stop = True
-        self.index_flag = False
         self.index = 0
+        self.index_flag = False
         self.kill = False
-
-    def set_stop(self, stop):
-        self.stop = stop
 
     def get_track(self):
         return self.queue[self.index]

@@ -37,14 +37,12 @@ class AudioPlayer():
         self.p_thread.set_queue(tracks)
 
     def play_track(self, index):
-        self.p_thread.set_stop(False)
         self.p_thread.set_index(index)
 
     def set_index_offset(self, index_offset):
         self.p_thread.set_index_offset(index_offset)
 
     def play(self):
-        self.p_thread.set_stop(False)
         if(self.session.player.state != 'paused'):
             try:
                 track = self.p_thread.get_track()
@@ -62,7 +60,6 @@ class AudioPlayer():
         self.session.player.pause()
 
     def stop(self):
-        self.p_thread.set_stop(True)
         self.session.player.unload()
 
     def close(self):
