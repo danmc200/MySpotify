@@ -3,7 +3,7 @@ import spotify
 import threading
 import getpass
 import wx
-import spotify_gui, player_thread, my_events
+import spotify_gui, player_thread 
 
 class AudioPlayer():
 
@@ -50,8 +50,7 @@ class AudioPlayer():
                 trackS.load()
                 self.session.player.load(trackS)
                 self.session.player.play()
-                evt = my_events.DisplayTrackEvent(my_events.myEVT_DISPLAY_TRACK, -1, track)
-                wx.PostEvent(self.ui, evt)
+                self.ui.post_track_event(track)
             except:
                 print "couldn't play"#todo show in gui
         self.session.player.play()
@@ -71,14 +70,13 @@ def get_username_password():
     pwd = getpass.getpass('Enter password\n')
     return un, pwd
 
-def login(session):
+def login(session, un, pwd):
     logged_in_event = threading.Event()
     connection_state_listener = lambda sess: (
         logged_in_event.set() if sess.connection.state is spotify.ConnectionState.LOGGED_IN else 0)
     session.on(
         spotify.SessionEvent.CONNECTION_STATE_UPDATED,
         connection_state_listener)
-    un, pwd = get_username_password()
     session.login(un, pwd)
     while not logged_in_event.wait(.1):
         session.process_events()
@@ -89,7 +87,8 @@ if __name__ == "__main__":
 
     session = spotify.Session()
     player = AudioPlayer(session, ui)
-    login(session)
+    un, pwd = get_username_password()
+    login(session, un, pwd)
 
-    ui.init_gui(player, my_events)
+    ui.init_gui(player)
     app.MainLoop()

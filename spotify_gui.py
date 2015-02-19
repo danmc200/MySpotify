@@ -1,12 +1,12 @@
 import wx
-import gui_util
+import gui_util, my_events
 
 class SpotifyGUI(wx.Frame):
 
     def __init__(self, *args, **kw):
         super(SpotifyGUI, self).__init__(*args, **kw) 
         
-    def init_gui(self, player, my_events):
+    def init_gui(self, player):
         self.player = player
         pnl = wx.Panel(self)
         util = gui_util.GuiUtil()
@@ -181,6 +181,10 @@ class SpotifyGUI(wx.Frame):
     def stop(self, e):
         self.btn.SetLabel("Play")
         self.player.stop()
+
+    def post_track_event(self, track):
+        evt = my_events.DisplayTrackEvent(my_events.myEVT_DISPLAY_TRACK, -1, track)
+        wx.PostEvent(self, evt)
 
     def OnCloseWindow(self, e):
         self.player.close()
