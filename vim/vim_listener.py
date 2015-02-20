@@ -13,8 +13,8 @@ class VimListener(threading.Thread):
             'search': self.ui.do_search,
             'next': self.ui.play_next,
             'prev': self.ui.play_prev,
-            'pause': self.player.pause,
-            'play': self.player.play}
+            'pause': self.ui.pause,
+            'play': self.ui.play}
 
     def quit(self):
         self.player.close()

@@ -22,6 +22,12 @@ class VimUI():
     def play_prev(self):
         self.player.set_index_offset(-1)
 
+    def play(self):
+        self.player.play()
+
+    def pause(self):
+        self.player.pause()
+
     def do_search(self):
         self.vim.command("let query=input('enter search: ')")
         query = self.vim.eval('query')
