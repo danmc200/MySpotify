@@ -16,6 +16,12 @@ class VimUI():
     def post_track_event(self, track):
         print track.name
 
+    def play_next(self):
+        self.player.set_index_offset(1)
+
+    def play_prev(self):
+        self.player.set_index_offset(-1)
+
     def do_search(self):
         self.vim.command("let query=input('enter search: ')")
         query = self.vim.eval('query')
