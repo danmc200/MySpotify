@@ -36,10 +36,8 @@ class PlayerThread(threading.Thread):
     def run(self):
         end_listener = lambda sess: (self.player.set_index_offset(1))
         self.session.on(spotify.SessionEvent.END_OF_TRACK, end_listener)
-        while(1):
-            if(self.kill):
-                return
-            elif(self.index_flag):
+        while(not self.kill):
+            if(self.index_flag):
                 self.index_flag = False
                 self.player.play()
 
