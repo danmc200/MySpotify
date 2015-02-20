@@ -9,10 +9,11 @@ python << EOF
 
 import vim, spotify
 import run_my_spotify, vim_ui
+import core.audio_player as audio_player
 
 session = run_my_spotify.get_session()
 ui = vim_ui.VimUI(vim)
-player = run_my_spotify.AudioPlayer(session, ui)
+player = audio_player.AudioPlayer(session, ui)
 ui.init_ui(player)
 
 un = vim.eval("strUn")
