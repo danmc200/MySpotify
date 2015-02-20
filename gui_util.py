@@ -50,6 +50,7 @@ class GuiBuilder():
 class ListboxUtil():
 
     def __init__(self):
+        self.queue = []
         self.tracks = {}
         self.albums = {}
         self.artists = {}
@@ -73,6 +74,7 @@ class ListboxUtil():
                 track_name += " (" + track.artists[0].name + ")"
             if(track_name not in track_names):
                 track_names.append(track_name)
+                self.queue.append(track)
                 self.tracks[track_name] = track
         self.clear_tracks(listbox)
         self.listbox_insert(listbox, track_names)

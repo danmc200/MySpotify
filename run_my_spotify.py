@@ -22,13 +22,13 @@ class AudioPlayer():
         return search
 
     def browse_artist(self, artist):
-        self.artist = session.get_artist(artist)
+        self.artist = self.session.get_artist(artist)
         self.browser = self.artist.browse()
         self.browser.load()
         return self.browser
 
     def browse_album(self, album):
-        self.album = session.get_album(album)
+        self.album = self.session.get_album(album)
         self.browser = self.album.browse()
         self.browser.load()
         return self.browser
@@ -46,13 +46,13 @@ class AudioPlayer():
         if(self.session.player.state != 'paused'):
             try:
                 track = self.p_thread.get_track()
-                trackS = session.get_track(track.link.uri)
+                trackS = self.session.get_track(track.link.uri)
                 trackS.load()
-                self.session.player.load(trackS)
-                self.session.player.play()
-                self.ui.post_track_event(track)
             except:
                 print "couldn't play"#todo show in gui
+            self.session.player.load(trackS)
+            self.session.player.play()
+            self.ui.post_track_event(track)
         self.session.player.play()
 
     def pause(self):
