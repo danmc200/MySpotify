@@ -4,7 +4,7 @@ import threading
 import getpass
 import wx
 import gui.spotify_gui as spotify_gui
-import core.audio_player
+import core.audio_player as audio_player
 import os
 
 def get_username_password():
