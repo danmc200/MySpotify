@@ -4,6 +4,7 @@ import threading
 import getpass
 import wx
 import gui.spotify_gui as spotify_gui, core.player_thread as player_thread
+import os
 
 class AudioPlayer():
 
@@ -65,6 +66,7 @@ class AudioPlayer():
         self.session.logout()
         self.p_thread.kill_thread()
 
+
 def get_username_password():
     un = raw_input('Enter Username\n')
     pwd = getpass.getpass('Enter password\n')
@@ -81,11 +83,18 @@ def login(session, un, pwd):
     while not logged_in_event.wait(.1):
         session.process_events()
 
+def get_session():
+    config = spotify.Config()
+    filename = os.path.dirname(os.path.realpath(__file__)) + "/spotify_appkey.key"
+    config.load_application_key_file(filename=filename)
+    session = spotify.Session(config=config)
+    return session
+
 if __name__ == "__main__":
     app = wx.App()
     ui = spotify_gui.SpotifyGUI(None)
 
-    session = spotify.Session()
+    session = get_session()
     player = AudioPlayer(session, ui)
     un, pwd = get_username_password()
     login(session, un, pwd)

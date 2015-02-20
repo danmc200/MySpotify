@@ -10,7 +10,7 @@ python << EOF
 import vim, spotify
 import run_my_spotify, vim_ui
 
-session = spotify.Session()
+session = run_my_spotify.get_session()
 ui = vim_ui.VimUI(vim)
 player = run_my_spotify.AudioPlayer(session, ui)
 ui.init_ui(player)
