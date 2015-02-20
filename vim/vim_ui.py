@@ -10,7 +10,7 @@ class VimUI():
 
     def init_ui(self, player):
         self.player = player
-        self.listener = vim_listener.VimListener(self.vim, self.player)
+        self.listener = vim_listener.VimListener(self.vim, self.player, self)
         self.listener.start()
 
     def post_track_event(self, track):

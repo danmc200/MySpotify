@@ -1,4 +1,4 @@
-let g:quitSpot="false"
+let g:action=""
 
 function! MySpotify()
 
@@ -19,13 +19,32 @@ ui.init_ui(player)
 un = vim.eval("strUn")
 pwd = vim.eval("strPwd")
 run_my_spotify.login(session, un, pwd)
-ui.do_search()
 
 EOF
 endfunction
 
 function! Quit()
-    let g:quitSpot="true"
+    let g:action="quit"
+endfunction
+
+function! Search()
+    let g:action="search"
+endfunction
+
+function! PlayNext()
+    let g:action="next"
+endfunction
+
+function! PlayPrev()
+    let g:action="prev"
+endfunction
+
+function! Play()
+    let g:action="play"
+endfunction
+
+function! Pause()
+    let g:action="pause"
 endfunction
 
 au WinLeave * silent call Quit()
