@@ -3,7 +3,7 @@ import spotify
 import threading
 import getpass
 import wx
-import spotify_gui, player_thread 
+import gui.spotify_gui as spotify_gui, core.player_thread as player_thread
 
 class AudioPlayer():
 
