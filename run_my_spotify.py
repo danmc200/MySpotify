@@ -4,7 +4,6 @@ import threading
 import getpass
 import wx
 import gui.spotify_gui as spotify_gui
-import core.player_thread as player_thread
 import core.audio_player
 import os
 
