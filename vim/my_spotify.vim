@@ -27,4 +27,5 @@ function! Quit()
     let g:quitSpot="true"
 endfunction
 
+au WinLeave * silent call Quit()
 au VimLeave * silent call Quit()
