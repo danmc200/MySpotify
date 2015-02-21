@@ -13,4 +13,4 @@ project requires:
         add project location to PYTHONPATH
 
 execute "run_my_spotify.py" to launch gui
-execute "vim/launch_spotify_vim.py" to launch vim plugin
+execute "vim/run_my_spotify_vim.py" to launch vim plugin
