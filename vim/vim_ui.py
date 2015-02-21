@@ -13,7 +13,6 @@ class VimUI():
         self.player = player
         self.listener = vim_listener.VimListener(self.vim, self.player, self)
         self.listener.start()
-        self.vim.command('set hls')
 
     def post_track_event(self, track):
         self.vim.command('/' + track.name)
