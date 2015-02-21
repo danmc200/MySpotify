@@ -25,6 +25,6 @@ class VimListener(threading.Thread):
             action_key = self.vim.eval('g:action')
             if(action_key in self.actions.keys()):
                 action = self.actions[action_key]
-                action()
                 self.vim.command('let g:action=""')
-            time.sleep(.2)
+                action()
+            time.sleep(.1)

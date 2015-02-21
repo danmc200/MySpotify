@@ -5,7 +5,6 @@ class VimUI():
 
     def __init__(self, vim):
         self.tracks = {}
-        self.queue = []
         self.vim = vim
 
     def init_ui(self, player):
@@ -36,15 +35,16 @@ class VimUI():
 
     def show_tracks(self, results, artist=True):
         track_names = []
+        queue = []
         for track in results.tracks:
             track_name = track.name 
             if(artist):
                 track_name += " (" + track.artists[0].name + ")"
             if(track_name not in track_names):
                 track_names.append(track_name)
-                self.queue.append(track)
+                queue.append(track)
                 self.tracks[track_name] = track
-        self.player.set_queue(self.queue)
+        self.player.set_queue(queue)
         cb = self.vim.current.buffer
         cb[: len(track_names)] = track_names
         self.player.play_track(0)#TODO
