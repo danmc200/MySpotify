@@ -67,23 +67,9 @@ class SpotifyGUI(wx.Frame):
         self.util.show_albums(search, self.album_listbox)
         self.util.show_artists(search, self.artist_listbox)
 
-    def build_queue(self, listbox, dic):
-        queue = []
-        for s in range(0, listbox.GetCount()):
-            if(s == wx.NOT_FOUND):
-                print "not found"
-                return s
-            name = listbox.GetString(s)
-            queue.append(dic[name])
-        return queue
-
     def get_selection(self, listbox, dic):
         select = listbox.GetSelection()
-        if(select == wx.NOT_FOUND):
-            print "not found"
-            return select
-        name = listbox.GetString(select)
-        return dic[name]
+        return dic[select]
 
     def display_track(self, evt):
         track = evt.GetValue()
@@ -109,7 +95,7 @@ class SpotifyGUI(wx.Frame):
     def play_track(self,e):
         track = self.get_selection(self.listbox, self.util.tracks)
         if(track != wx.NOT_FOUND):
-            self.player.set_queue(self.util.queue)
+            self.player.set_queue(self.util.tracks)
             index = self.listbox.GetSelection()
             self.player.play_track(index)
             self.btn.SetLabel("Pause")

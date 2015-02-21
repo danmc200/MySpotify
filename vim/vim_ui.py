@@ -83,9 +83,8 @@ class VimUI():
         album_names = []
         self.albums = []
         for album in results.albums:
-            album_name = album.name 
-            if(album_name not in album_names):
-                album_names.append(album_name)
+            if(album.name not in album_names):
+                album_names.append(album.name)
                 self.albums.append(album)
         cb = self.vim.windows[window_album].buffer
         cb[:] = None
@@ -95,9 +94,8 @@ class VimUI():
         artist_names = []
         self.artists = []
         for artist in results.artists:
-            artist_name = artist.name 
-            if(artist_name not in artist_names):
-                artist_names.append(artist_name)
+            if(artist.name not in artist_names):
+                artist_names.append(artist.name)
                 self.artists.append(artist)
         cb = self.vim.windows[window_artist].buffer
         cb[:] = None

@@ -50,10 +50,9 @@ class GuiBuilder():
 class ListboxUtil():
 
     def __init__(self):
-        self.queue = []
-        self.tracks = {}
-        self.albums = {}
-        self.artists = {}
+        self.tracks = []
+        self.albums = []
+        self.artists = []
 
     def clear(self, lb):
         leng = lb.GetCount()
@@ -67,15 +66,14 @@ class ListboxUtil():
 
     def show_tracks(self, search, listbox, artist=True):
         track_names = []
-        self.tracks = {}
+        self.tracks = []
         for track in search.tracks:
             track_name = track.name 
             if(artist):
                 track_name += " (" + track.artists[0].name + ")"
             if(track_name not in track_names):
                 track_names.append(track_name)
-                self.queue.append(track)
-                self.tracks[track_name] = track
+                self.tracks.append(track)
         self.clear_tracks(listbox)
         self.listbox_insert(listbox, track_names)
     def clear_tracks(self, listbox):
@@ -83,11 +81,11 @@ class ListboxUtil():
 
     def show_albums(self, search, album_listbox):
         albums_names = []
-        self.albums = {}
+        self.albums = []
         for album in search.albums:
             if(album.name not in albums_names):
                 albums_names.append(album.name)
-                self.albums[album.name] = album
+                self.albums.append(album)
         self.clear_albums(album_listbox)
         self.listbox_insert(album_listbox, albums_names)
     def clear_albums(self, album_listbox):
@@ -95,11 +93,11 @@ class ListboxUtil():
 
     def show_artists(self, search, artist_listbox):
         artists_names = []
-        self.artists = {}
+        self.artists = []
         for artist in search.artists:
             if(artist.name not in artists_names):
                 artists_names.append(artist.name)
-                self.artists[artist.name] = artist
+                self.artists.append(artist)
         self.clear_artists(artist_listbox)
         self.listbox_insert(artist_listbox, artists_names)
     def clear_artists(self, artist_listbox):
