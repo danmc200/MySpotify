@@ -15,8 +15,9 @@ class VimUI():
         self.listener.start()
 
     def post_track_event(self, track):
-        self.vim.command('/' + track.name)
-        print track.name
+        track_name = self.get_track_name(track)
+        self.vim.command('/' + track_name)
+        print track_name
 
     def play_next(self):
         self.player.set_index_offset(1)
@@ -56,14 +57,15 @@ class VimUI():
         self.show_albums(results)
         self.show_artists(results)
 
-    def show_tracks(self, results, artist=True):
+    def get_track_name(self, track):
+        return track.name + " (" + track.artists[0].name + ")"
+
+    def show_tracks(self, results):
         track_names = []
         queue = []
         self.tracks = []
         for track in results.tracks:
-            track_name = track.name 
-            if(artist):
-                track_name += " (" + track.artists[0].name + ")"
+            track_name = self.get_track_name(track)
             if(track_name not in track_names):
                 track_names.append(track_name)
                 queue.append(track)
