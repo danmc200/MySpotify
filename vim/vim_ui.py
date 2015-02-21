@@ -4,9 +4,9 @@ import vim_listener
 class VimUI():
 
     def __init__(self, vim):
-        self.tracks = {}
-        self.albums = {}
-        self.artists = {}
+        self.tracks = []
+        self.albums = []
+        self.artists = []
         self.vim = vim
 
     def init_ui(self, player):
@@ -30,6 +30,23 @@ class VimUI():
     def pause(self):
         self.player.pause()
 
+    def select(self):
+        cur_win = self.vim.current.window
+        i = 0
+        for win in self.vim.windows:
+            if win == cur_win:
+                break
+            i+=1
+        row = cur_win.cursor[0] - 1
+        if(i == 0):
+            self.player.play_track(row)
+        if(i == 1):
+            browser = self.player.browse_album(self.albums[row].link.uri)
+            self.show_tracks(browser)
+        if(i == 2):
+            browser = self.player.browse_artist(self.artists[row].link.uri)
+            self.show_albums(browser)
+
     def do_search(self):
         query = self.vim.eval('g:query')
         if(query == ""):
@@ -42,6 +59,7 @@ class VimUI():
     def show_tracks(self, results, artist=True):
         track_names = []
         queue = []
+        self.tracks = []
         for track in results.tracks:
             track_name = track.name 
             if(artist):
@@ -49,28 +67,36 @@ class VimUI():
             if(track_name not in track_names):
                 track_names.append(track_name)
                 queue.append(track)
-                self.tracks[track_name] = track
+                self.tracks.append(track)
         self.player.set_queue(queue)
         cb = self.vim.windows[0].buffer
+        cb[:] = None
         cb[:len(track_names)] = track_names
-        self.player.play_track(0)#TODO
 
     def show_albums(self, results):
         album_names = []
+        self.albums = []
         for album in results.albums:
             album_name = album.name 
             if(album_name not in album_names):
                 album_names.append(album_name)
-                self.albums[album_name] = album
+                self.albums.append(album)
         cb = self.vim.windows[1].buffer
+        cb[:] = None
         cb[:len(album_names)] = album_names
 
     def show_artists(self, results):
         artist_names = []
+        self.artists = []
         for artist in results.artists:
             artist_name = artist.name 
             if(artist_name not in artist_names):
                 artist_names.append(artist_name)
-                self.artists[artist_name] = artist
+                self.artists.append(artist)
         cb = self.vim.windows[2].buffer
+        cb[:] = None
         cb[:len(artist_names)] = artist_names
+
+    def close(self):
+        self.player.close()
+        self.vim.command('qa!')

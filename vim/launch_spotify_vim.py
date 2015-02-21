@@ -1,3 +1,3 @@
 #!/usr/bin/python
 import os
-os.system('vim -c ":source my_spotify.vim" artists')
+os.system('vim -R -c ":source my_spotify.vim" -O tracks albums artists')

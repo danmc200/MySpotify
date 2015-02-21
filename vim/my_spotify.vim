@@ -1,17 +1,17 @@
 let g:action=""
 let g:query=""
 
+map <Return> :call Select() <CR>
 map <C-n> :call PlayNext() <CR>
 map <C-p> :call PlayPrev() <CR>
 map <Space> :call Pause() <CR>
 noremap / :call Search() <CR>
+map q :call Quit() <CR>
 set hls
 set number
 
 let strUn=input('Enter username: ')
 let strPwd=input('Enter password: ')
-: vsplit albums
-: vsplit tracks
 
 python << EOF
 
@@ -31,7 +31,10 @@ run_my_spotify.login(session, un, pwd)
 EOF
 
 function! Quit()
-    let g:action="quit"
+    let quit=input('Quit? (y/n)')
+    if quit =~ "y"
+        let g:action="quit"
+    endif
 endfunction
 
 function! Search()
@@ -55,4 +58,6 @@ function! Pause()
     let g:action="pause"
 endfunction
 
-au VimLeave * silent call Quit()
+function! Select()
+    let g:action="select"
+endfunction

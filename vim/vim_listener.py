@@ -14,10 +14,10 @@ class VimListener(threading.Thread):
             'next': self.ui.play_next,
             'prev': self.ui.play_prev,
             'pause': self.ui.pause,
-            'play': self.ui.play}
+            'play': self.ui.play,
+            'select': self.ui.select}
 
     def quit(self):
-        self.player.close()
         self.kill = True
 
     def run(self):
@@ -28,3 +28,4 @@ class VimListener(threading.Thread):
                 action = self.actions[action_key]
                 action()
             time.sleep(.1)
+        self.ui.close()
