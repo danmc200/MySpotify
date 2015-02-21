@@ -4,6 +4,7 @@ let g:query=""
 map <C-n> :call PlayNext() <CR>
 map <C-p> :call PlayPrev() <CR>
 map <Space> :call Pause() <CR>
+noremap / :call Search() <CR>
 
 let strUn=input('Enter username: ')
 let strPwd=input('Enter password: ')
