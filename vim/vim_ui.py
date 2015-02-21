@@ -5,14 +5,18 @@ class VimUI():
 
     def __init__(self, vim):
         self.tracks = {}
+        self.albums = {}
+        self.artists = {}
         self.vim = vim
 
     def init_ui(self, player):
         self.player = player
         self.listener = vim_listener.VimListener(self.vim, self.player, self)
         self.listener.start()
+        self.vim.command('set hls')
 
     def post_track_event(self, track):
+        self.vim.command('/' + track.name)
         print track.name
 
     def play_next(self):
@@ -31,6 +35,8 @@ class VimUI():
         query = self.vim.eval('g:query')
         results = self.player.search(query)
         self.show_tracks(results)
+        self.show_albums(results)
+        self.show_artists(results)
 
     def show_tracks(self, results, artist=True):
         track_names = []
@@ -44,6 +50,26 @@ class VimUI():
                 queue.append(track)
                 self.tracks[track_name] = track
         self.player.set_queue(queue)
-        cb = self.vim.current.buffer
+        cb = self.vim.windows[0].buffer
         cb[:len(track_names)] = track_names
         self.player.play_track(0)#TODO
+
+    def show_albums(self, results):
+        album_names = []
+        for album in results.albums:
+            album_name = album.name 
+            if(album_name not in album_names):
+                album_names.append(album_name)
+                self.albums[album_name] = album
+        cb = self.vim.windows[1].buffer
+        cb[:len(album_names)] = album_names
+
+    def show_artists(self, results):
+        artist_names = []
+        for artist in results.artists:
+            artist_name = artist.name 
+            if(artist_name not in artist_names):
+                artist_names.append(artist_name)
+                self.artists[artist_name] = artist
+        cb = self.vim.windows[2].buffer
+        cb[:len(artist_names)] = artist_names

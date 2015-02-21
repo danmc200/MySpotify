@@ -52,7 +52,10 @@ class AudioPlayer():
         self.session.player.play()
 
     def pause(self):
-        self.session.player.pause()
+        if(self.session.player.state == 'paused'):
+            self.session.player.play()
+        else:
+            self.session.player.pause()
 
     def stop(self):
         self.session.player.unload()

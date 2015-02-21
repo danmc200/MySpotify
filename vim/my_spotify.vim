@@ -1,10 +1,14 @@
 let g:action=""
 let g:query=""
 
-function! MySpotify()
+map <C-n> :call PlayNext() <CR>
+map <C-p> :call PlayPrev() <CR>
+map <Space> :call Pause() <CR>
 
 let strUn=input('Enter username: ')
 let strPwd=input('Enter password: ')
+: vsplit albums
+: vsplit tracks
 
 python << EOF
 
@@ -22,7 +26,6 @@ pwd = vim.eval("strPwd")
 run_my_spotify.login(session, un, pwd)
 
 EOF
-endfunction
 
 function! Quit()
     let g:action="quit"
@@ -49,5 +52,4 @@ function! Pause()
     let g:action="pause"
 endfunction
 
-au WinLeave * silent call Quit()
 au VimLeave * silent call Quit()
