@@ -33,6 +33,8 @@ class VimUI():
 
     def do_search(self):
         query = self.vim.eval('g:query')
+        if(query == ""):
+            return
         results = self.player.search(query)
         self.show_tracks(results)
         self.show_albums(results)
