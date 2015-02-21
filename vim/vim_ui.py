@@ -28,8 +28,7 @@ class VimUI():
         self.player.pause()
 
     def do_search(self):
-        self.vim.command("let query=input('Enter search: ')")
-        query = self.vim.eval('query')
+        query = self.vim.eval('g:query')
         results = self.player.search(query)
         self.show_tracks(results)
 
@@ -46,5 +45,5 @@ class VimUI():
                 self.tracks[track_name] = track
         self.player.set_queue(queue)
         cb = self.vim.current.buffer
-        cb[: len(track_names)] = track_names
+        cb[:len(track_names)] = track_names
         self.player.play_track(0)#TODO

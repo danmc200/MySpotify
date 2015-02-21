@@ -1,4 +1,5 @@
 let g:action=""
+let g:query=""
 
 function! MySpotify()
 
@@ -28,6 +29,7 @@ function! Quit()
 endfunction
 
 function! Search()
+    let g:query=input('Enter search: ')
     let g:action="search"
 endfunction
 

@@ -60,4 +60,3 @@ class AudioPlayer():
     def close(self):
         self.session.logout()
         self.p_thread.kill_thread()
-
