@@ -1,6 +1,10 @@
 import threading, time
 import vim_listener
 
+window_track = 0
+window_album = 1
+window_artist = 2
+
 class VimUI():
 
     def __init__(self, vim):
@@ -39,12 +43,12 @@ class VimUI():
                 break
             i+=1
         row = cur_win.cursor[0] - 1
-        if(i == 0):
+        if(i == window_track):
             self.player.play_track(row)
-        if(i == 1):
+        elif(i == window_album):
             browser = self.player.browse_album(self.albums[row].link.uri)
             self.show_tracks(browser)
-        if(i == 2):
+        elif(i == window_artist):
             browser = self.player.browse_artist(self.artists[row].link.uri)
             self.show_albums(browser)
 
@@ -71,7 +75,7 @@ class VimUI():
                 queue.append(track)
                 self.tracks.append(track)
         self.player.set_queue(queue)
-        cb = self.vim.windows[0].buffer
+        cb = self.vim.windows[window_track].buffer
         cb[:] = None
         cb[:len(track_names)] = track_names
 
@@ -83,7 +87,7 @@ class VimUI():
             if(album_name not in album_names):
                 album_names.append(album_name)
                 self.albums.append(album)
-        cb = self.vim.windows[1].buffer
+        cb = self.vim.windows[window_album].buffer
         cb[:] = None
         cb[:len(album_names)] = album_names
 
@@ -95,7 +99,7 @@ class VimUI():
             if(artist_name not in artist_names):
                 artist_names.append(artist_name)
                 self.artists.append(artist)
-        cb = self.vim.windows[2].buffer
+        cb = self.vim.windows[window_artist].buffer
         cb[:] = None
         cb[:len(artist_names)] = artist_names
 
