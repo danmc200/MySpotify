@@ -8,7 +8,6 @@ class SpotifyGUI(wx.Frame):
         
     def init_gui(self, player):
         self.player = player
-        pnl = wx.Panel(self)
         builder = gui_builder.Builder()
         self.util = listbox_util.Util()
         search_size = 180
