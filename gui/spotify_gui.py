@@ -1,5 +1,5 @@
 import wx
-import gui_util, my_events
+import listbox_util, my_events, gui_builder
 
 class SpotifyGUI(wx.Frame):
 
@@ -9,8 +9,8 @@ class SpotifyGUI(wx.Frame):
     def init_gui(self, player):
         self.player = player
         pnl = wx.Panel(self)
-        builder = gui_util.GuiBuilder()
-        self.util = gui_util.ListboxUtil()
+        builder = gui_builder.Builder()
+        self.util = listbox_util.Util()
         search_size = 180
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         self.Bind(my_events.EVT_DISPLAY_TRACK, self.display_track)
