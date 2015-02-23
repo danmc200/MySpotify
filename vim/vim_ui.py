@@ -37,18 +37,18 @@ class VimUI():
 
     def select(self):
         cur_win = self.vim.current.window
-        i = 0
+        row = cur_win.cursor[0]-1
+        win_num = 0#windowlist?
         for win in self.vim.windows:
             if win == cur_win:
                 break
-            i+=1
-        row = cur_win.cursor[0] - 1
-        if(i == window_track):
+            win_num+=1
+        if(win_num == window_track):
             self.player.play_track(row)
-        elif(i == window_album):
+        elif(win_num == window_album):
             browser = self.player.browse_album(self.albums[row].link.uri)
             self.show_tracks(browser)
-        elif(i == window_artist):
+        elif(win_num == window_artist):
             browser = self.player.browse_artist(self.artists[row].link.uri)
             self.show_albums(browser)
 
