@@ -3,7 +3,7 @@ project requires:
     These 3rd party libs:
         pyspotify 2, pyalsaaudio
 
-    And requires these files: (obtainable via a paid spotify account and registering it with spotify-dev)
+    And requires these files in core directory: (obtainable via a paid spotify account and registering it with spotify-dev)
         spotify_appkey.key, spotify_cred_blob.txt
 
     to use gui:
