@@ -17,41 +17,28 @@ class Util():
         for selection in selections:
             listbox.Insert(selection, 0)
 
-    def show_tracks(self, search, listbox, artist=True):
-        track_names = []
-        self.tracks = []
-        for track in search.tracks:
-            track_name = track.name 
-            if(artist):
-                track_name += " (" + track.artists[0].name + ")"
-            if(track_name not in track_names):
-                track_names.append(track_name)
-                self.tracks.append(track)
-        self.clear_tracks(listbox)
-        self.listbox_insert(listbox, track_names)
-    def clear_tracks(self, listbox):
+    def show(self, col, search_col, listbox, decorator=None):
+        names = []
+        for el in search_col:
+            name = el.name
+            if(decorator != None):
+                name = decorator(el)
+            if(name not in names):
+                names.append(name)
+                col.append(el)
         self.clear(listbox)
+        self.listbox_insert(listbox, names)
+        return col
+
+    def show_tracks(self, search, listbox, artist=True):
+        decor = lambda track : track.name + " (" + track.artists[0].name + ")"
+        self.tracks = []
+        self.tracks = self.show(self.tracks, search.tracks, listbox, decor)
 
     def show_albums(self, search, album_listbox):
-        albums_names = []
         self.albums = []
-        for album in search.albums:
-            if(album.name not in albums_names):
-                albums_names.append(album.name)
-                self.albums.append(album)
-        self.clear_albums(album_listbox)
-        self.listbox_insert(album_listbox, albums_names)
-    def clear_albums(self, album_listbox):
-        self.clear(album_listbox)
+        self.albums = self.show(self.albums, search.albums, album_listbox)
 
     def show_artists(self, search, artist_listbox):
-        artists_names = []
         self.artists = []
-        for artist in search.artists:
-            if(artist.name not in artists_names):
-                artists_names.append(artist.name)
-                self.artists.append(artist)
-        self.clear_artists(artist_listbox)
-        self.listbox_insert(artist_listbox, artists_names)
-    def clear_artists(self, artist_listbox):
-        self.clear(artist_listbox)
+        self. artists = self.show(self.artists, search.artists, artist_listbox)

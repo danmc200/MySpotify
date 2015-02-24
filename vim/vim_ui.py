@@ -64,42 +64,33 @@ class VimUI():
     def get_track_name(self, track):
         return track.name + " (" + track.artists[0].name + ")"
 
-    def show_tracks(self, results):
-        track_names = []
-        queue = []
-        self.tracks = []
-        for track in results.tracks:
-            track_name = self.get_track_name(track)
-            if(track_name not in track_names):
-                track_names.append(track_name)
-                queue.append(track)
-                self.tracks.append(track)
-        self.player.set_queue(queue)
-        cb = self.vim.windows[window_track].buffer
+    def show(self, col, results_col, window, decor=None):
+        names = []
+        for el in results_col:
+            name = el.name
+            if(decor != None):
+                name = decor(el)
+            if(name not in names):
+                names.append(name)
+                col.append(el)
+        cb = self.vim.windows[window].buffer
         cb[:] = None
-        cb[:len(track_names)] = track_names
+        cb[:len(names)] = names
+        return col
+
+    def show_tracks(self, results):
+        self.tracks = []
+        self.tracks = self.show(self.tracks, results.tracks, window_track, self.get_track_name)
+
+        self.player.set_queue(self.tracks)
 
     def show_albums(self, results):
-        album_names = []
         self.albums = []
-        for album in results.albums:
-            if(album.name not in album_names):
-                album_names.append(album.name)
-                self.albums.append(album)
-        cb = self.vim.windows[window_album].buffer
-        cb[:] = None
-        cb[:len(album_names)] = album_names
+        self.albums = self.show(self.albums, results.albums, window_album)
 
     def show_artists(self, results):
-        artist_names = []
         self.artists = []
-        for artist in results.artists:
-            if(artist.name not in artist_names):
-                artist_names.append(artist.name)
-                self.artists.append(artist)
-        cb = self.vim.windows[window_artist].buffer
-        cb[:] = None
-        cb[:len(artist_names)] = artist_names
+        self.artists = self.show(self.artists, results.artists, window_artist)
 
     def close(self):
         self.player.close()
