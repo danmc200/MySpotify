@@ -43,6 +43,7 @@ class VimUI():
             if win == cur_win:
                 break
             win_num+=1
+
         if(win_num == window_track):
             self.player.play_track(row)
         elif(win_num == window_album):
@@ -81,7 +82,6 @@ class VimUI():
     def show_tracks(self, results):
         self.tracks = []
         self.tracks = self.show(self.tracks, results.tracks, window_track, self.get_track_name)
-
         self.player.set_queue(self.tracks)
 
     def show_albums(self, results):

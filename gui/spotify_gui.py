@@ -5,11 +5,13 @@ class SpotifyGUI(wx.Frame):
 
     def __init__(self, *args, **kw):
         super(SpotifyGUI, self).__init__(*args, **kw) 
+        self.tracks = []
+        self.albums = []
+        self.artists = []
         
     def init_gui(self, player):
         self.player = player
         builder = gui_builder.Builder()
-        self.util = listbox_util.Util()
         search_size = 180
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         self.Bind(my_events.EVT_DISPLAY_TRACK, self.display_track)
@@ -62,9 +64,9 @@ class SpotifyGUI(wx.Frame):
         self.Show(True)          
 
     def show_results(self, search):
-        self.util.show_tracks(search, self.listbox)
-        self.util.show_albums(search, self.album_listbox)
-        self.util.show_artists(search, self.artist_listbox)
+        self.tracks = listbox_util.show_tracks(search, self.listbox, self.tracks)
+        self.albums = listbox_util.show_albums(search, self.album_listbox, self.albums)
+        self.artists = listbox_util.show_artists(search, self.artist_listbox, self.artists)
 
     def get_selection(self, listbox, dic):
         select = listbox.GetSelection()
@@ -75,16 +77,16 @@ class SpotifyGUI(wx.Frame):
         self.playing_label.SetLabel("Track: " + track.name)
 
     def browse_artist(self, e):
-        artist = self.get_selection(self.artist_listbox, self.util.artists)
+        artist = self.get_selection(self.artist_listbox, self.artists)
         if(artist != wx.NOT_FOUND):
             browser = self.player.browse_artist(artist.link.uri)
-            self.util.show_albums(browser, self.album_listbox)
+            self.albums = listbox_util.show_albums(browser, self.album_listbox, self.albums)
 
     def browse_album(self, e):
-        album = self.get_selection(self.album_listbox, self.util.albums)
+        album = self.get_selection(self.album_listbox, self.albums)
         if(album != wx.NOT_FOUND):
             browser = self.player.browse_album(album.link.uri)
-            self.util.show_tracks(browser, self.listbox)
+            self.tracks = listbox_util.show_tracks(browser, self.listbox, self.tracks)
 
     def search(self, e):
         if(e.GetKeyCode() == wx.WXK_RETURN):
@@ -92,9 +94,9 @@ class SpotifyGUI(wx.Frame):
             self.show_results(search)
 
     def play_track(self,e):
-        track = self.get_selection(self.listbox, self.util.tracks)
+        track = self.get_selection(self.listbox, self.tracks)
         if(track != wx.NOT_FOUND):
-            self.player.set_queue(self.util.tracks)
+            self.player.set_queue(self.tracks)
             index = self.listbox.GetSelection()
             self.player.play_track(index)
             self.btn.SetLabel("Pause")
