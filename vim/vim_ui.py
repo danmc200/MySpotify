@@ -38,11 +38,7 @@ class VimUI():
     def select(self):
         cur_win = self.vim.current.window
         row = cur_win.cursor[0]-1
-        win_num = 0#windowlist?
-        for win in self.vim.windows:
-            if win == cur_win:
-                break
-            win_num+=1
+        win_num = list(self.vim.windows).index(cur_win)
 
         if(win_num == window_track):
             self.player.play_track(row)
