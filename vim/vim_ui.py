@@ -20,7 +20,8 @@ class VimUI():
 
     def post_track_event(self, track):
         track_name = self.get_track_name(track)
-        self.vim.command('/' + track_name)
+        search_name = track_name.replace('[', '\\[').replace(']', '\\]')
+        self.vim.command('/' + search_name)
         print track_name
 
     def play_next(self):
