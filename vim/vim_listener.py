@@ -2,10 +2,9 @@ import threading, time
 
 class VimListener(threading.Thread):
 
-    def __init__(self, vim, player, ui):
+    def __init__(self, vim, ui):
         super(VimListener, self).__init__()
         self.vim = vim
-        self.player = player
         self.ui = ui
         self.kill = False
         self.actions = {
