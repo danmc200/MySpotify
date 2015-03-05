@@ -11,7 +11,7 @@ set hls
 set number
 
 let strUn=input('Enter username: ')
-let strPwd=input('Enter password: ')
+let strPwd=inputsecret('Enter password: ')
 
 python << EOF
 
