@@ -18,6 +18,7 @@ class VimListener(threading.Thread):
 
     def quit(self):
         self.kill = True
+        self.ui.close()
 
     def run(self):
         while(not self.kill):
@@ -27,4 +28,3 @@ class VimListener(threading.Thread):
                 action = self.actions[action_key]
                 action()
             time.sleep(.1)
-        self.ui.close()

@@ -41,14 +41,17 @@ class VimUI():
         row = cur_win.cursor[0]-1
         win_num = list(self.vim.windows).index(cur_win)
 
-        if(win_num == window_track):
-            self.player.play_track(row)
-        elif(win_num == window_album):
-            browser = self.player.browse_album(self.albums[row].link.uri)
-            self.show_tracks(browser)
-        elif(win_num == window_artist):
-            browser = self.player.browse_artist(self.artists[row].link.uri)
-            self.show_albums(browser)
+        try:
+            if(win_num == window_track):
+                self.player.play_track(row)
+            elif(win_num == window_album):
+                browser = self.player.browse_album(self.albums[row].link.uri)
+                self.show_tracks(browser)
+            elif(win_num == window_artist):
+                browser = self.player.browse_artist(self.artists[row].link.uri)
+                self.show_albums(browser)
+        except:
+            print "couldn't load"
 
     def do_search(self):
         query = self.vim.eval('g:query')
