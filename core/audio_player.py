@@ -41,20 +41,24 @@ class AudioPlayer():
 
     def play(self):
         track = self.p_thread.get_track()
-        if(self.session.player.state != 'paused'):
-            try:
-                trackS = self.session.get_track(track.link.uri)
-                trackS.load()
-            except:
-                print "couldn't play"#todo show in gui
-            self.session.player.load(trackS)
-            self.session.player.play()
+        try:
+            trackS = self.session.get_track(track.link.uri)
+            trackS.load()
+        except:
+            print "couldn't play"#todo show in gui
+        self.session.player.load(trackS)
+        self.session.player.play()
+        self.ui.post_track_event(track)
+        self.session.player.play()
+
+    def resume(self):
+        track = self.p_thread.get_track()
         self.ui.post_track_event(track)
         self.session.player.play()
 
     def pause(self):
         if(self.session.player.state == 'paused'):
-            self.play()
+            self.resume()
         else:
             self.session.player.pause()
 

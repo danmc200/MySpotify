@@ -43,7 +43,7 @@ class Builder():
         label.SetFont(font)
 
     def set_label_color(self, label):
-        label.SetForegroundColour('yellow')
+        label.SetForegroundColour('red')
         font = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
         label.SetFont(font)
 

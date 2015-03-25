@@ -7,6 +7,7 @@ map <C-p> :call PlayPrev() <CR>
 map <Space> :call Pause() <CR>
 noremap / :call Search() <CR>
 map Q :call Quit() <CR>
+
 set hls
 set number
 
