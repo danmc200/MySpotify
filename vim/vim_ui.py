@@ -20,7 +20,7 @@ class VimUI():
 
     def post_track_event(self, track):
         track_name = self.get_track_name(track)
-        repl = {'[': '\\[', ']': '\\]', '*': '\\*', '/': '\/'}
+        repl = {'[': '\\[', ']': '\\]', '*': '\\*', '/': '\/', '-': '\-'}
         search_name = track_name
         for k in repl:
             search_name = search_name.replace(k, repl[k])
