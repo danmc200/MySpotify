@@ -14,3 +14,25 @@ project requires:
 
 execute "run_my_spotify.py" to launch gui
 execute "vim/run_my_spotify_vim.py" to launch vim plugin
+
+--------------------------------------------------------------------------------
+
+Install dependencies (ubuntu): 
+step 1)
+wget -q -O - https://apt.mopidy.com/mopidy.gpg | sudo apt-key add -
+sudo wget -q -O /etc/apt/sources.list.d/mopidy.list https://apt.mopidy.com/jessie.list
+sudo apt-get update
+sudo apt-get install python-spotify
+sudo apt-get install libspotify-dev
+
+step 2)
+sudo apt-get install python-dev
+sudo apt-get install python-pip
+sudo apt-get install libasound2-dev
+pip install pyalsaaudio
+
+step 3)
+export PYTHONPATH=${PYTHONPATH}:{path-to-proj}
+to get key go to:
+https://devaccount.spotify.com/my-account/keys/
+and place in core dir
